@@ -2,7 +2,7 @@
 
 
 // Node constructor definition
-Node::Node(std::vector<double> arr, unsigned int setID)
+KDNode::KDNode(std::vector<double> arr, unsigned int setID)
 {
     point = arr;
     id    = setID;
@@ -11,12 +11,12 @@ Node::Node(std::vector<double> arr, unsigned int setID)
 }
 
 
-
 // Kd_tree constructor definition
 Kd_tree::Kd_tree(unsigned int k)
 {
     this-> k_dimension = k;
     this-> rootNode = nullptr;
+    std::cout<< "Kd_tree of dimension '" << k << "' is initialised \n";
 }
  
 
@@ -31,12 +31,12 @@ void Kd_tree::insert_point(const std::vector<double> &point, unsigned int id)
 
 
 
-void Kd_tree::recursive_insert(Node* root, const std::vector<double> &point, unsigned int id, unsigned int dimension)
+void Kd_tree::recursive_insert(KDNode* root, const std::vector<double> &point, unsigned int id, unsigned int dimension)
 {
     // if a leaf node, assign point and return
     if(root == nullptr)
     {
-        root = new Node(point , id);
+        root = new KDNode(point , id);
         return;
     } 
 
@@ -65,7 +65,7 @@ std::vector<unsigned int> Kd_tree::query_tree(const std::vector<double> &target_
 
 
 
-void Kd_tree::recursive_search(Node* root, const std::vector<double> &target_point, std::vector<unsigned int> &nn_points, const double &dist_threshold, const unsigned int dimension)
+void Kd_tree::recursive_search(KDNode* root, const std::vector<double> &target_point, std::vector<unsigned int> &nn_points, const double &dist_threshold, const unsigned int dimension)
 {
 
     // leaf node reached
@@ -101,7 +101,7 @@ void Kd_tree::recursive_search(Node* root, const std::vector<double> &target_poi
 
 
 
-bool Kd_tree::check_bdy_limit(Node* node, const std::vector<double> &target_point, const double &dist_threshold)
+bool Kd_tree::check_bdy_limit(KDNode* kdnode, const std::vector<double> &target_point, const double &dist_threshold)
 {
     bool inside_limits {true};
     bool lower_limit_status {true};
@@ -109,8 +109,8 @@ bool Kd_tree::check_bdy_limit(Node* node, const std::vector<double> &target_poin
 
     for(unsigned int i =0; i < target_point.size(); i++)
     {
-        lower_limit_status = ((target_point[i] - node->point[i]) >=-dist_threshold) ? true : false;
-        upper_limit_status = ((target_point[i] - node->point[i]) <= dist_threshold) ? true : false;
+        lower_limit_status = ((target_point[i] - kdnode->point[i]) >=-dist_threshold) ? true : false;
+        upper_limit_status = ((target_point[i] - kdnode->point[i]) <= dist_threshold) ? true : false;
 
         if((lower_limit_status && upper_limit_status) == false)
         {
@@ -123,12 +123,12 @@ bool Kd_tree::check_bdy_limit(Node* node, const std::vector<double> &target_poin
 
 
 
-bool Kd_tree::check_circular_limit(Node* node, const std::vector<double> &target_point, const double &dist_threshold)
+bool Kd_tree::check_circular_limit(KDNode* kdnode, const std::vector<double> &target_point, const double &dist_threshold)
 {
     bool within_radius {true};
     for(unsigned int i =0; i < target_point.size(); i++)
     {
-        if(sqrt(((target_point[i] - node->point[i]) * (target_point[i] - node->point[i]))) > dist_threshold)
+        if(sqrt(((target_point[i] - kdnode->point[i]) * (target_point[i] - kdnode->point[i]))) > dist_threshold)
         {
             within_radius = false;
             break;

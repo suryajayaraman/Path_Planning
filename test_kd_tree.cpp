@@ -1,5 +1,9 @@
 #include "kd_tree_nn.h"
 
+/** TODO
+ * Write test functions and visualisation functions for kd_tree implementation
+ */
+
 int main()
 {
     std::vector<std::vector<double>> test_points {
@@ -10,7 +14,7 @@ int main()
                                                     {2.1, 0.9}
                                                 };
 
-    // Kd_tree test_kd_tree(2);
-    std::vector<std::vector<double>> nn_points {};
+    Kd_tree test_kd_tree(2);
+    // std::vector<std::vector<double>> nn_points {};
     return 0;
 }
